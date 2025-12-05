@@ -8,10 +8,18 @@ with open(input) as f:
     
 max_list = []
 for bank in tqdm.tqdm(lines):
-    max_pair = '00'
-    for i in range(len(bank)):
-        for j in range(i+1, len(bank)):
-            max_pair = max(int(max_pair), int(bank[i]+bank[j]))
-    max_list.append(max_pair)
+    max_string = ''
+    for k in range(12):
+        end = len(bank)-12-k
+        best_i = 0
+        best_digit = bank[best_i]
+        for i in range(1, end+1):
+            digit = bank[i]
+            if digit > best_digit:
+                best_digit = digit
+                best_i = i
+        max_string+=best_digit
+        start = best_i+1
+    print(max_string)
+    max_list.append(max_string)
 print(max_list)
-print(sum(max_list))
