@@ -9,14 +9,31 @@ blocks = lines.split('\n\n')
 fresh_ingredients = blocks[0].splitlines()
 available_ingredients = blocks[1].splitlines()
 
-print(fresh_ingredients)
-print(available_ingredients)    
-fresh_available_ingredients = set([])
-for available_ingredient in available_ingredients:
-    for fresh_ingredient_range in fresh_ingredients:
-        start, end = int(fresh_ingredient_range.split('-')[0]), int(fresh_ingredient_range.split('-')[1])
-        if int(available_ingredient)-start>=0 and int(available_ingredient)-end<=0:
-            print(f'Ingredient {available_ingredient} is fresh')
-            fresh_available_ingredients.add(available_ingredient)
-print(fresh_available_ingredients)
-print(len(fresh_available_ingredients))
+# print(fresh_ingredients)
+# print(available_ingredients)    
+fresh_available_ingredients = []
+
+min_start = 0
+ranges =[]
+for fresh_ingredient_range in fresh_ingredients:
+    start, end = int(fresh_ingredient_range.split('-')[0]), int(fresh_ingredient_range.split('-')[1])
+    ranges.append((start, end))
+    
+ranges.sort(key=lambda x:x[0])
+
+merged = []
+
+for range in ranges:
+    if not merged:
+        merged.append(range)
+    else:
+        last_start, last_end = merged[-1]
+        current_start, current_end = range
+        if current_start <= last_end:
+            merged[-1] = (last_start, max(last_end, current_end))
+        else: 
+            merged.append(range)
+
+total_size = sum(end - start + 1 for start, end in merged)
+print(total_size)
+        
